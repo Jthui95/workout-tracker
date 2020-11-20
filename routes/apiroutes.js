@@ -4,22 +4,33 @@ const Workout = require("../models/workout.js")
 
     router.get("/api/workouts", function (req, res) {
         Workout.find()
-            .then(data => {
-                res.json(data)
-            })
-            .catch(err => {
-                res.json(error)
-            })
-    });
+        .then(dbDeepThoughts => {
+            res.json(dbDeepThoughts);
+        })
+        .catch(err => {
+            res.status(400).json(err);
+        });
+});
+
+router.get("/api/workouts/range", (req, res) => {
+    Workout.find({}).limit(5)
+        .then(dbDeepThoughts => {
+            res.json(dbDeepThoughts);
+        })
+        .catch(err => {
+            res.status(400).json(err);
+        });
+});
 
     router.post("/api/workouts", function (req, res) {
-        Workout.create({})
-            .then(data => res.json(data))
-            .catch(error => {
-                console.log("error", error)
-                res.json(error)
-            })
-    });
+        Workout.create(res)
+        .then(dbDeepThoughts => {
+            res.json(dbDeepThoughts);
+        })
+        .catch(err => {
+            res.status(400).json(err);
+        });
+});
 
     router.put("/api/workouts/:id", ({ body, params }, res) => {
         Workout.findByIdAndUpdate(
@@ -27,11 +38,11 @@ const Workout = require("../models/workout.js")
             { $push: { exercises: body } },
             { new: true, runValidators: true }
         )
-            .then(data => res.json(data))
-            .catch(error => {
-                console.log("error", error)
-                res.json(error)
-            })
-    });
-
+        .then(dbDeepThoughts => {
+            res.json(dbDeepThoughts);
+        })
+        .catch(err => {
+            res.status(400).json(err);
+        });  
+});
 module.exports = router;

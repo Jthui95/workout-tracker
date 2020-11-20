@@ -6,27 +6,31 @@ async function initWorkout() {
       .querySelector("a[href='/exercise?']")
       .setAttribute("href", `/exercise?id=${lastWorkout._id}`);
 
+    // removed totalDuration from this object and added it tallyExercises() function because this was returning 'undefined'
     const workoutSummary = {
       date: formatDate(lastWorkout.day),
-      totalDuration: lastWorkout.totalDuration,
       numExercises: lastWorkout.exercises.length,
       ...tallyExercises(lastWorkout.exercises)
     };
 
+    console.log(workoutSummary)
     renderWorkoutSummary(workoutSummary);
   } else {
     renderNoWorkoutText()
   }
 }
 
+// added units to strings
 function tallyExercises(exercises) {
   const tallied = exercises.reduce((acc, curr) => {
     if (curr.type === "resistance") {
-      acc.totalWeight = (acc.totalWeight || 0) + curr.weight;
-      acc.totalSets = (acc.totalSets || 0) + curr.sets;
-      acc.totalReps = (acc.totalReps || 0) + curr.reps;
+      acc.totalDuration = (acc.totalDuration || 0) + curr.duration + " minutes";
+      acc.totalWeight = (acc.totalWeight || 0) + curr.weight + " lbs";
+      acc.totalSets = (acc.totalSets || 0) + curr.sets + " sets";
+      acc.totalReps = (acc.totalReps || 0) + curr.reps + " reps";
     } else if (curr.type === "cardio") {
-      acc.totalDistance = (acc.totalDistance || 0) + curr.distance;
+      acc.totalDistance = (acc.totalDistance || 0) + curr.distance + " miles";
+      acc.totalDuration = (acc.totalDuration || 0) + curr.duration + " minutes";
     }
     return acc;
   }, {});
